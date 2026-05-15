@@ -1,0 +1,77 @@
+"use client";
+
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { useForm } from "./FormContext";
+import FormField from "./FormField";
+
+export default function Step1AgeGate() {
+  const { updateForm, setStep, setIsRejected } = useForm();
+  const [dob, setDob] = useState("");
+  const [error, setError] = useState("");
+
+  const handleContinue = () => {
+    if (!dob) {
+      setError("Please enter your date of birth to continue.");
+      return;
+    }
+
+    const birthDate = new Date(dob);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+
+    if (age < 18) {
+      setIsRejected(true);
+      return;
+    }
+
+    updateForm({ date_of_birth: dob });
+    setStep(2);
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -16 }}
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      className="space-y-10"
+    >
+      <div>
+        <h2 className="font-serif text-petal text-2xl md:text-3xl mb-3">
+          Before we begin.
+        </h2>
+        <p className="text-mint/50 font-sans font-light text-sm leading-relaxed">
+          Please confirm your date of birth. NOMI Studio only works with creators who are 18 or older.
+        </p>
+      </div>
+
+      <FormField
+        label="Date of birth"
+        as="input"
+        type="date"
+        value={dob}
+        onChange={(e) => {
+          setDob(e.target.value);
+          setError("");
+        }}
+        max={new Date().toISOString().split("T")[0]}
+      />
+
+      {error && (
+        <p className="text-rose/70 text-xs font-sans">{error}</p>
+      )}
+
+      <button
+        onClick={handleContinue}
+        className="border border-blush/30 text-petal px-10 py-3.5 text-xs tracking-[0.15em] uppercase font-sans font-medium hover:bg-blush/8 hover:border-blush/60 transition-all duration-500"
+      >
+        Continue
+      </button>
+    </motion.div>
+  );
+}

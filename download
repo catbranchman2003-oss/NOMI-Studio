@@ -1,0 +1,32 @@
+"use client";
+
+import { motion } from "framer-motion";
+import Link from "next/link";
+
+export default function RejectionScreen() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+      className="space-y-8 py-8"
+    >
+      <div className="w-8 h-px bg-blush/30" />
+      <div className="space-y-4">
+        <h2 className="font-serif text-petal text-2xl md:text-3xl">
+          We appreciate your interest.
+        </h2>
+        <p className="text-mint/60 font-sans font-light text-sm leading-relaxed max-w-sm">
+          We are unable to accept applications at this time. NOMI Studio works
+          exclusively with creators who meet our eligibility requirements.
+        </p>
+      </div>
+      <Link
+        href="/"
+        className="inline-block text-mint/30 text-xs tracking-[0.15em] uppercase font-sans hover:text-mint/60 transition-colors duration-300"
+      >
+        ← Return to NOMI Studio
+      </Link>
+    </motion.div>
+  );
+}
